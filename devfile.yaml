@@ -2,12 +2,12 @@ schemaVersion: 2.1.0
 metadata:
   name: cheese-quizz
   version: 1.2.0
-  displayName: Maven Java
-  description: Upstream Maven and OpenJDK 11
+  displayName: Quarkus Java
+  description: Quarkus with Java
   tags:
     - Java
-    - Maven
-  projectType: Maven
+    - Quarkus
+  projectType: Quarkus
   language: Java
   icon: https://raw.githubusercontent.com/devfile-samples/devfile-stack-icons/main/java-maven.jpg
 attributes:
@@ -15,12 +15,29 @@ attributes:
     name: devworkspace-config
     namespace: openshift-devspaces
   controller.devfile.io/storage-type: per-user
-starterProjects:
-  - name: springbootproject
-    git:
-      remotes:
-        origin: 'https://github.com/odo-devfiles/springboot-ex.git'
 components:
+  - name: tools
+    container:
+      image: registry.access.redhat.com/ubi8/openjdk-17
+      args: ['tail', '-f', '/dev/null']
+      memoryLimit: 1Gi
+      mountSources: true
+      volumeMounts:
+        - name: m2
+          path: /home/user/.m2
+      endpoints:
+        - name: http-quarkus
+          targetPort: 8080
+        - exposure: none
+          name: debug
+          targetPort: 5858
+      env:
+        - name: DEBUG_PORT
+          value: '5858'
+  - name: m2
+    volume:
+      size: 3Gi
+
   - name: kube
     volume: {}
   - name: openshift
