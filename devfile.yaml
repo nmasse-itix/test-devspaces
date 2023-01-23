@@ -16,7 +16,7 @@ starterProjects:
       remotes:
         origin: 'https://github.com/odo-devfiles/springboot-ex.git'
 components:
-  - name: tools
+  - name: mytools
     container:
       image: docker.io/adoptopenjdk/openjdk11:jdk-11.0.16.1_1-centos
       command: ["tail", "-f", "/dev/null"]
