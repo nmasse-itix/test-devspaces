@@ -15,3 +15,30 @@ starterProjects:
     git:
       remotes:
         origin: 'https://github.com/odo-devfiles/springboot-ex.git'
+components:
+  - name: tools
+    container:
+      image: docker.io/adoptopenjdk/openjdk11:jdk-11.0.16.1_1-centos
+      command: ["tail", "-f", "/dev/null"]
+      memoryLimit: 1Gi
+      mountSources: true
+      endpoints:
+        - name: quizz-question
+          targetPort: 8080
+        - name: quizz-client
+          targetPort: 8081
+        - exposure: none
+          name: debug
+          targetPort: 5858
+      volumeMounts:
+        - name: m2
+          path: /home/user/.m2
+      env:
+        - name: DEBUG_PORT
+          value: '5858'
+        - name: MAVEN_OPTS
+          value: -Dmaven.repo.local=/home/user/.m2/repository
+        - name: MAVEN_USER_HOME
+          value: /home/user/.m2
+        - name: HOME
+          value: /home/user
