@@ -33,6 +33,9 @@ components:
       volumeMounts:
         - name: m2
           path: /home/user/.m2
+  - name: m2
+    volume: {}
+
       env:
         - name: DEBUG_PORT
           value: '5858'
