@@ -18,26 +18,43 @@ attributes:
 components:
   - name: tools
     container:
-      image: registry.access.redhat.com/ubi8/openjdk-17
+      image: "registry.redhat.io/devspaces/udi-rhel8:3.3"
       args: ['tail', '-f', '/dev/null']
-      memoryLimit: 1Gi
+      memoryLimit: 5.07G
+      memoryRequest: 256Mi
       mountSources: true
       volumeMounts:
         - name: m2
           path: /home/user/.m2
       endpoints:
-        - name: http-quarkus
-          targetPort: 8080
         - exposure: none
           name: debug
-          targetPort: 5858
+          protocol: tcp
+          targetPort: 5005
+        - name: quizz-question
+          targetPort: 8080
+        - name: quizz-client
+          targetPort: 8081
       env:
-        - name: DEBUG_PORT
-          value: '5858'
+        - name: QUARKUS_HTTP_HOST
+          value: 0.0.0.0
+        - name: CHE_DASHBOARD_URL
+          value: 'https://devspaces.apps.appdev.itix.xyz'
+        - name: CHE_PLUGIN_REGISTRY_URL
+          value: 'https://devspaces.apps.appdev.itix.xyz/plugin-registry/v3'
+        - name: CHE_PLUGIN_REGISTRY_INTERNAL_URL
+          value: 'http://plugin-registry.openshift-devspaces.svc:8080/v3'
+        - name: OPENVSX_REGISTRY_URL
+          value: 'https://open-vsx.org'
+        - name: MAVEN_OPTS
+          value: -Dmaven.repo.local=/home/user/.m2/repository
+        - name: MAVEN_USER_HOME
+          value: /home/user/.m2
+        - name: HOME
+          value: /home/user
   - name: m2
     volume:
       size: 3Gi
-
   - name: kube
     volume: {}
   - name: openshift
